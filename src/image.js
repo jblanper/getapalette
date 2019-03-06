@@ -5,7 +5,8 @@ export default class CachedImage {
 
         this.img;
         this.height;
-        this.cachedCtx;
+        this.canvas;
+        this.ctx;
     }
 
     init () {
@@ -33,31 +34,33 @@ export default class CachedImage {
         this.setImgSize();
 
         // fake canvas to load image
-        this.cachedCtx = Object.assign(
+        this.canvas = Object.assign(
             document.createElement('canvas'),
             {width: this.width, height: this.height}
-        ).getContext('2d');
+        );
 
-        this.cachedCtx.drawImage(this.img, 0, 0, this.width, this.height);
+        this.ctx = this.canvas.getContext('2d');
+
+        this.ctx.drawImage(this.img, 0, 0, this.width, this.height);
     }
 
     setImgSize () {
         const imgRatio = this.img.height / this.img.width;
 
-        if (this.width) {
+        if (this.width && this.width < window.innerWidth) {
             this.height = this.width * imgRatio;
+            return;
+        }
+
+        const browserRatio = window.innerHeight / window.innerWidth;
+
+        if (browserRatio < imgRatio) {
+            this.width = window.innerHeight / imgRatio;
+            this.height = window.innerHeight;
         }
         else {
-            const browserRatio = window.innerHeight / window.innerWidth;
-
-            if (browserRatio < imgRatio) {
-                this.width = window.innerHeight / imgRatio;
-                this.height = window.innerHeight;
-            }
-            else {
-                this.width = window.innerWidth;
-                this.height = window.innerWidth * imgRatio;
-            }
+            this.width = window.innerWidth;
+            this.height = window.innerWidth * imgRatio;
         }
     }
 }

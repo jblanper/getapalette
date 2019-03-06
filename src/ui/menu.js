@@ -4,6 +4,7 @@ import FileButton from './fileButton.js';
 import DownloadButton from './downloadButton.js';
 import Slider from './slider.js';
 import ToggleButton from './toggleButton.js';
+import Button from './button.js';
 import Section from './section.js';
 import { html, svg } from './html.js';
 
@@ -17,7 +18,7 @@ export default class Menu {
             description: Description, select: Select,
             toggleButton: ToggleButton, slider: Slider,
             fileButton: FileButton, downloadButton: DownloadButton,
-            section: Section
+            section: Section, button: Button
         };
 
         this.node = null;

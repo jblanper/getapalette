@@ -8,6 +8,7 @@ export default class ImageAnalyzer {
 
         this.imgData = this.ctx.getImageData(0, 0, this.width, this.height);
 
+        this.paletteFactor = 6;
         this.palettes = [];
         this.imageColors = [];
 
@@ -53,7 +54,7 @@ export default class ImageAnalyzer {
     setPaletteData () {
         let bucket = this.divideColorsByRange(this.imageColors);
 
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < this.paletteFactor; i++) {
             let temp = [];
             let palette = [];
 

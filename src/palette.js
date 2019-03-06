@@ -6,7 +6,7 @@ export default class Palette {
         this.width = (window.innerHeight < window.innerWidth) 
             ? window.innerHeight
             : window.innerWidth;
-        this.index = 3;
+        this.factor = 2;
 
         this.cellSizes = [];
         this.offsets = [];
@@ -52,23 +52,38 @@ export default class Palette {
         this.clear();
         this.ctx.save();
         this.ctx.translate(
-            this.offsets[this.index],
-            this.offsets[this.index]
+            this.offsets[this.factor],
+            this.offsets[this.factor]
         );
 
-        this.data[this.index].forEach((color, i) => {
-            const x = (i % this.rowNums[this.index]) *
-                this.cellSizes[this.index];
-            const y = Math.floor(i / this.rowNums[this.index]) *
-                this.cellSizes[this.index];
+        this.data[this.factor].forEach((color, i) => {
+            const x = (i % this.rowNums[this.factor]) *
+                this.cellSizes[this.factor];
+            const y = Math.floor(i / this.rowNums[this.factor]) *
+                this.cellSizes[this.factor];
 
             this.ctx.fillStyle = color.rgb;
             this.ctx.fillRect(
                 x, y,
-                this.cellSizes[this.index],
-                this.cellSizes[this.index]
+                this.cellSizes[this.factor],
+                this.cellSizes[this.factor]
             );
         });
         this.ctx.restore()
     }
+
+    copyColorsToClipboard () {
+        // https://hackernoon.com/copying-text-to-clipboard-with-javascript-df4d4988697f
+        console.log(this.data, this.factor)
+        const el = document.createElement('textarea');
+        el.value = this.data[this.factor].map(c => c.rgb).join(', ');
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    }
+
 }

@@ -1,13 +1,14 @@
 import { html } from './html.js';
 
-export default class DownloadButton {
-    constructor ({parent, label, fn}) {
+export default class Button {
+    constructor ({parent, fn, updateFn = null, label}) {
         this.fn = fn;
+        this.updateFn = updateFn;
 
         this.label = label;
 
-        this.parent = parent;
         this.node = null;
+        this.parent = parent;
 
         this.render();
         this.eventListener();
@@ -15,9 +16,10 @@ export default class DownloadButton {
 
     render () {
         this.node = html('button', {
-            textContent: this.label, id: this.label.replace(/\s/g, '-')
+            textContent: this.label, id: this.label.replace(/\s/g, '-') 
         }, null);
-        this.parent.node.appendChild(this.node)
+
+        this.parent.node.appendChild(this.node);
     }
 
     eventListener () {
@@ -25,7 +27,9 @@ export default class DownloadButton {
     }
 
     eventHandler (e) {
-        // download function
         this.fn();
+
+        if (this.updateFn) this.updateFn();
+        else this.parent.updateFn();
     }
 }

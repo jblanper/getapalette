@@ -41,7 +41,8 @@ body {
     transform: translateX(-100%);
 }
 
-#ui > *, #section-container div > * {
+/*#ui > *, #section-container div > * {*/
+#ui div, button, hr, a, .file-btn {
     margin: 0 auto 1ex auto;
     font-weight: 700;
     width: 180px;

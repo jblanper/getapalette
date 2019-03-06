@@ -4,28 +4,31 @@ import Palette from './palette.js';
 import Menu from './ui/menu.js';
 
 export default class Sketch {
-    constructor (ctx, options) {
+    constructor (ctx) {
         this.ctx = ctx;
-        this.backgroundColor = options.backgroundColor;
+        this.backgroundColor = '#fff';
 
-        this.imageUrl = options.imageUrl;
-        this.imageWidth = options.imageWidth;
-        this.drawingType = options.drawingType;
+        this.imageUrl =  './photo.jpg';
+        this.drawingType = 'image';
     }
 
     init ({imageUrl = this.imageUrl} = {}) {
         this.clear();
+        this.drawingType = 'image';
 
-        this.cachedImg = new CachedImage({url: imageUrl, width: this.imageWidth});
+        this.imgToDraw = new CachedImage({url: imageUrl});
+        this.imgToAnalyze = new CachedImage({url: imageUrl, width: 300});
 
-        return this.cachedImg.init()
-        .then(msg => {
-            console.log(msg);
+        return Promise.all([
+            this.imgToDraw.init(),
+            this.imgToAnalyze.init()
+        ]).then(msgs => {
+            msgs.forEach(msg => console.log(msg));
 
             // analyze image
-            this.imageAnalyzer = new ImageAnalyzer(this.cachedImg.cachedCtx);
+            this.imageAnalyzer = new ImageAnalyzer(this.imgToAnalyze.ctx);
 
-            //plotting
+            // get palette
             this.palette = new Palette({
                 ctx: this.ctx, data: this.imageAnalyzer.palettes
             });
@@ -48,7 +51,7 @@ export default class Sketch {
 
         menu.createComponent('description', {
             title: 'Get a palette!',
-            content: ['Upload an image and generate a palette with the most representative colors. Select the option "palette" below to get the palette. Use de slider to determine the number of colors. Enjoy!']
+            content: ['Upload an image and generate a palette with the most representative colors. Select the option "palette" below to get the palette. Use the slider to determine the number of colors. Enjoy!']
         });
 
         menu.addSeparator();
@@ -74,14 +77,19 @@ export default class Sketch {
             label: 'palette factor',
             max: 5,
             min: 0,
-            prop: 'index',
+            prop: 'factor',
             scope: this.palette,
-            value: this.palette.index
+            value: this.palette.factor
+        });
+
+        const copyColorsButton = menu.createComponent('button', {
+            label: 'copy colors',
+            fn: this.palette.copyColorsToClipboard.bind(this.palette)
         });
 
         drawingTypeSection.createGroup({
             name: 'palette',
-            nodes: [paletteDivisionSlider]
+            nodes: [paletteDivisionSlider, copyColorsButton]
         });
 
         // end sections //
@@ -116,12 +124,12 @@ export default class Sketch {
     }
 
     drawImage () {
-        this.ctx.canvas.width = this.cachedImg.width;
-        this.ctx.canvas.height = this.cachedImg.height;
+        this.ctx.canvas.width = this.imgToDraw.width;
+        this.ctx.canvas.height = this.imgToDraw.height;
 
         this.ctx.drawImage(
-            this.cachedImg.cachedCtx.canvas, 0, 0,
-            this.cachedImg.width, this.cachedImg.height
+            this.imgToDraw.canvas, 0, 0,
+            this.imgToDraw.width, this.imgToDraw.height
         );
     }
 

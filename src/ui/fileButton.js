@@ -20,10 +20,11 @@ export default class FileButton {
     }
 
     render () {
-        this.input = html('input', {type: 'file', id: this.prop}, null);
-        this.node = html('label',
-            {textContent: this.label, classes: ['file-btn']},
-            [this.input]
+        this.input = html('input', {type: 'file'}, null);
+        this.node = html('label', {
+            textContent: this.label, id: this.label.replace(/\s/g, '-'),
+            classes: ['file-btn']
+            }, [this.input]
         );
 
         this.parent.node.appendChild(this.node);
