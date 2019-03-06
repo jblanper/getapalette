@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Get a Palette!</title>
+  <link rel="stylesheet" href="ui.css" type="text/css">
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font: 12px sans-serif;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      margin: auto;
+    }
+
+    #loading {
+      width: 100px;
+      height: 1em;
+      color: #888;
+      font-size: 2em;
+      position: fixed;
+      top: 0; right: 0; bottom: 0; left: 0;
+      margin: auto;
+    }
+
+    #loading p { 
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="loading"><p>Loading...</p></div>
+  <canvas id="sketch"></canvas>
+  <script type="module" src="bundle.js"></script>
+</body>
+</html>
