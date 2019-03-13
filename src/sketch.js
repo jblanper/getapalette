@@ -119,8 +119,14 @@ export default class Sketch {
 
         const data =  cachedCanvasCtx.canvas.toDataURL('image/png');
 
-        const win = window.open();
-        win.document.write(`<img src="${data}" />`);
+        const link = document.createElement('a');
+        link.style = 'display: none;';
+        link.download = (data.startsWith('data:image')) ? 'img.png' : 'img.json';
+        link.href = data;
+
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
     }
 
     drawImage () {
