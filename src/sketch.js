@@ -46,7 +46,8 @@ export default class Sketch {
         const menu = new Menu({
             showOnLoad: true,
             updateFn: this.draw.bind(this),
-            scope: this
+            scope: this,
+            githubUrl: '//github.com/jblanper/getapalette'
         });
 
         menu.createComponent('description', {
